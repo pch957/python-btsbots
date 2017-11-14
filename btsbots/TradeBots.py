@@ -29,6 +29,13 @@ class TradeBots(BTSBotsClient):
         self.my_balances = self.ddp_client.find('balance', selector={'u': self.account})
         self.prices = self.ddp_client.find('price', selector={})
 
+    async def cancel_all(self):
+        ops = []
+        for _e in self.my_orders:
+            if _e['t'] == 7:
+                _op = await self.build_cancel_order('1.7.%s' % _e['id'])
+                ops.append(_op)
+        await self.build_transaction(ops)
 
 if __name__ == '__main__':
     try:

@@ -235,7 +235,7 @@ class MeteorClient(EventEmitter):
             self.emit('subscribed', name)
 
         if name in self.subscriptions:
-            raise MeteorClientException('Already subcribed to {}'.format(name))
+            self.unsubscribe(name)
 
         sub_id = self.ddp_client.subscribe(name, params, subscribed)
         self.subscriptions[name] = {

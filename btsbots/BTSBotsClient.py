@@ -36,7 +36,6 @@ import hashlib
 import struct
 import math
 import sys
-# import getpass
 
 try:
     import asyncio
@@ -80,9 +79,6 @@ class BTSBotsClient(object):
         # self.ddp_client.on('removed', self.removed)
         self.ddp_client.connect()
         self.ddp_client.subscribe('global_properties')
-        self.ddp_client.subscribe('price')
-        self.ddp_client.subscribe('login_order', params=["demo.btsbots"])
-        self.ddp_client.subscribe('login_balance', params=["demo.btsbots"])
 
     def unsync(self):
         if not self.isSync:
@@ -151,6 +147,10 @@ class BTSBotsClient(object):
                 # raise LoginFailed
             else:
                 self.account = account
+                self.ddp_client.subscribe('price')
+                self.ddp_client.subscribe('login_order', params=[account])
+                self.ddp_client.subscribe('login_balance', params=[account])
+
         self.ddp_client._login(login_data, logged_in)
 
     async def get_asset(self, assets):
@@ -162,6 +162,9 @@ class BTSBotsClient(object):
 
     def onProfile(self, id, fields):
         # print('on profile:', id, fields)
+        pass
+
+    async def trade_bots(self):
         pass
 
     def onNewBlock(self, id, fields):
@@ -186,7 +189,6 @@ class BTSBotsClient(object):
             self.onNewBlock(id, fields)
         elif collection == 'users' and 'profile' in fields:
             self.onProfile(id, fields)
-        pass
 
     def changed(self, collection, id, fields, cleared):
         self.spindle()
@@ -200,9 +202,6 @@ class BTSBotsClient(object):
 
     def removed(self, collection, id):
         print('* REMOVED {} {}'.format(collection, id))
-
-    async def trade_bots(self):
-        pass
 
     async def run(self):
         timer = 0
@@ -232,6 +231,8 @@ class BTSBotsClient(object):
                 print('unexcept error:', e)
 
 if __name__ == '__main__':
+    # import getpass
+
     account = 'test.iauth'
     wifkey = "5HvPnGfqMDrrdBGrtn2xRy1MQGbVgW5m8EWmXUNHBX9W4DzVGyM"
     # account = input('account name: ').strip()

@@ -253,7 +253,11 @@ setup_dict = dict(
     ],
     packages=find_packages(exclude=(TESTS_DIRECTORY,)),
     install_requires=[
-        "bts"
+        'pyee',
+        'ws4py',
+        "graphenelib==0.4.8",
+        "scrypt==0.7.1",
+        "ecdsa==0.13"
         # your module dependencies
     ] + python_version_specific_requires,
     # Allow tests to be run with `python setup.py test'.

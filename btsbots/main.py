@@ -8,7 +8,13 @@ import argparse
 import sys
 
 from btsbots import metadata
-import json
+from btsbots.BTSBotsClient import BTSBotsClient
+import getpass
+
+try:
+    import asyncio
+except ImportError:
+    import trollius as asyncio
 
 
 def main(argv):
@@ -38,20 +44,20 @@ URL: <{url}>
         description=metadata.description,
         epilog=epilog)
     arg_parser.add_argument(
-        '--config', type=argparse.FileType('r'),
-        help='config file')
-    arg_parser.add_argument(
         '-V', '--version',
         action='version',
         version='{0} {1}'.format(metadata.project, metadata.version))
 
-    args = arg_parser.parse_args(args=argv[1:])
-
-    config_info = {}
-    if (args.config):
-        config_info = json.load(args.config)
-
-    print(config_info)
+    # account = 'test.iauth'
+    # wifkey = "5HvPnGfqMDrrdBGrtn2xRy1MQGbVgW5m8EWmXUNHBX9W4DzVGyM"
+    account = input('account name: ').strip()
+    wifkey = getpass.getpass('active private key for %s:' % account)
+    client = BTSBotsClient('wss://btsbots.com/websocket', debug=False)
+    # client = BTSBotsClient('ws://localhost:3000/websocket', debug=False)
+    client.login(account, wifkey)
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(client.run())
+    loop.run_forever()
 
     return 0
 

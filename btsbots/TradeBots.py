@@ -16,9 +16,8 @@ class TradeBots(BTSBotsClient):
         self.my_balance = {}
         self.prices = {}
         self.asset_blacklist = []
-        self.bots_factory = {
-            'mm1': self.run_bots_mm1
-            }
+        self.bots_factory = {}
+        self.register_bots('mm1', self.run_bots_mm1)
 
     def register_bots(self, name, coro):
         self.bots_factory[name] = coro
@@ -121,6 +120,8 @@ class TradeBots(BTSBotsClient):
                 if e['u'] == self.account:
                     self.add_my_balance(e['a_c'], -e['b_c'], -e['b_c'])
                     self.add_my_balance(e['a_d'], e['b_d'], e['b_d'])
+        for _key in self.orders_all:
+            self.orders_all.sort(key=lambda x: x['p'])
         if cancel_done:
             self.cancel_orders = []
 
@@ -234,7 +235,9 @@ class TradeBots(BTSBotsClient):
         ops_bots['new'].append(
             await self.build_limit_order(amount, price, a_s, a_b))
 
-    async def check_order(self, ops_bots, controller, a_s, a_b, price, freq=60, price_limit=0.003):
+    async def check_order(
+            self, ops_bots, controller, a_s, a_b, price,
+            freq=60, max_price=float('inf'), max_change=0.003):
         found = False
         price_in_cny = controller['price']
         amount = min(
@@ -259,7 +262,8 @@ class TradeBots(BTSBotsClient):
             if _key not in self.update_price_time:
                 self.update_price_time[_key] = 0
             if self.head_time-self.update_price_time[_key] > freq:
-                if abs(e['p']/price-1) > price_limit:
+                if abs(e['p']/price-1) > max_change or \
+                        e['p'] > max_price:
                     await self.bots_cancel_order(ops_bots, e, controller, a_s, a_b)
                     print('reason: price %s change to %s' % (e['p'], price))
                     self.update_price_time[_key] = self.head_time

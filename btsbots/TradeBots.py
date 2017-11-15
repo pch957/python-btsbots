@@ -16,6 +16,12 @@ class TradeBots(BTSBotsClient):
         self.my_balance = {}
         self.prices = {}
         self.asset_blacklist = []
+        self.bots_factory = {
+            'mm1': self.run_bots_mm1
+            }
+
+    def register_bots(self, name, coro):
+        self.bots_factory[name] = coro
 
     async def build_cancel_order(self, order_id):
         self.cancel_orders.append(order_id)
@@ -193,10 +199,12 @@ class TradeBots(BTSBotsClient):
             controller['market'][a_b]["balance_limit_order"] /= p_b
             controller['market'][a_b]["balance_limit_buy"] /= p_b
             controller['market'][a_b]["balance_limit_sell"] = balance_limit_sell/p_s
+            default_bots = 'mm1'
             if 't' not in bots_config[a_s][a_b]:
-                bots_config[a_s][a_b]['t'] = 'mm1'
-            if bots_config[a_s][a_b]['t'] == "mm1":
-                await self.run_bots_mm1(ops_bots, controller, a_s, a_b)
+                bots_config[a_s][a_b]['t'] = default_bots
+            bots_type = bots_config[a_s][a_b]['t']
+            if bots_type in self.bots_factory:
+                await self.bots_factory[bots_type](ops_bots, controller, a_s, a_b)
 
     async def trade_bots(self):
         self.init_bots_data()

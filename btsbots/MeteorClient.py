@@ -95,7 +95,11 @@ class MeteorClient(EventEmitter):
             self._resubscribe()
 
     def _resubscribe(self):
-        self.collection_data.data = {}
+        if 'users' in self.collection_data.data:
+            self.collection_data.data = {
+                'users': self.collection_data.data['users']}
+        else:
+            self.collection_data.data = {}
         cur_subs = self.subscriptions.items()
         self.subscriptions = {}
         for name, value in cur_subs:

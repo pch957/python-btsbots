@@ -8,7 +8,7 @@ import argparse
 import sys
 
 from btsbots import metadata
-from btsbots.BTSBotsClient import BTSBotsClient
+from btsbots.TradeBots import TradeBots
 import getpass
 
 try:
@@ -52,8 +52,8 @@ URL: <{url}>
     # wifkey = "5HvPnGfqMDrrdBGrtn2xRy1MQGbVgW5m8EWmXUNHBX9W4DzVGyM"
     account = input('account name: ').strip()
     wifkey = getpass.getpass('active private key for %s:' % account)
-    client = BTSBotsClient('wss://btsbots.com/websocket', debug=False)
-    # client = BTSBotsClient('ws://localhost:3000/websocket', debug=False)
+    client = TradeBots('wss://btsbots.com/websocket', debug=False)
+    # client = TradeBots('ws://localhost:3000/websocket', debug=False)
     client.login(account, wifkey)
     loop = asyncio.get_event_loop()
     loop.run_until_complete(client.run())

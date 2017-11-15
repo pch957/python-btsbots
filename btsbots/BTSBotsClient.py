@@ -195,16 +195,16 @@ class BTSBotsClient(object):
                 'amount': 0,
                 'asset_id': "1.3.0"},
             'fee_paying_account': self.account_id,
-            'order': order_id}]
+            'order': "1.7.%s" % order_id}]
         return _op_cancel
 
-    async def build_sell_order(self, amount, price, sellAsset, buyAsset):
+    async def build_limit_order(self, amount, price, sellAsset, buyAsset):
         newasset = []
         for _a in [sellAsset, buyAsset]:
             if _a not in self.ai:
                 newasset.append(_a)
         if newasset:
-            _ret = await self.ddp_client.rpc('getAsset', [newasset])
+            _ret = await self.get_asset(newasset)
             for _e in _ret:
                 if 'a' not in _e:
                     return None
@@ -254,6 +254,7 @@ class BTSBotsClient(object):
             self.isSync = False
         if 'B' in fields and 'id' in fields:
             self.head_block = fields['B']
+            self.head_time = fields['T']
             self.head_block_id = fields['id']
         # print("new block %s: %s" % (id, fields))
         # print(self.isSync, self.sync_time)

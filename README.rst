@@ -3,9 +3,9 @@ trade bots for bitshares
 =========================
 
 .. image:: https://bitsharestalk.org/BitSharesFinalTM200.png
-   :target: https://bitsharestalk.org
+   :target: https://btsbots.com
 
-This project provides trade bots for bitshares
+This project provides a python client trade bots for https://btsbots.com 
 
 Project Setup
 =============
@@ -16,9 +16,18 @@ Quick Start
 
        $ sudo pip3 install btsbots
 
+#. Run::
+
+       $ btsbots
+
+    before run the bots, you need configure your bots from https://btsbots.com first.
+    after run the command, input your bts account name, and the private key for active permissions.
+    when the spindle rotate, it means the data update from server,
+    when a '*' appear, it means the trade bots are running.
+
 Configuration
 ------------
-todo
+config your bots from https://btsbots.com
 
 Supported Python Versions
 =========================

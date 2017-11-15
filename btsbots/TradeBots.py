@@ -33,8 +33,12 @@ class TradeBots(BTSBotsClient):
             self.bots_config = json.loads(p['bots_config'])
         if 'bots_limit' in p:
             self.bots_limit = json.loads(p['bots_limit'])
+            for _key in self.bots_limit:
+                self.bots_limit[_key] = float(self.bots_limit[_key])
         if 'local_price' in p:
             self.local_price = json.loads(p['local_price'])
+            for _key in self.local_price:
+                self.local_price[_key][0] = float(self.local_price[_key][0])
 
     def get_my_balance(self, a, t):
         if a not in self.my_balance:
@@ -168,8 +172,8 @@ class TradeBots(BTSBotsClient):
             if p_b == 0:
                 continue
             if a_b in bots_config and a_s in bots_config[a_b]:
-                sp1 = 1+bots_config[a_s][a_b]['spread']/100.0
-                sp2 = 1+bots_config[a_b][a_s]['spread']/100.0
+                sp1 = 1+float(bots_config[a_s][a_b]['spread'])/100.0
+                sp2 = 1+float(bots_config[a_b][a_s]['spread'])/100.0
                 if sp1*sp2 < 1.0:
                     print('[warnning] wrong spread for market %s/%s' % (a_s, a_b))
                     continue
@@ -253,8 +257,8 @@ class TradeBots(BTSBotsClient):
                 print('reason: extra order')
                 continue
             if amount <= 0.0 or \
-                    e['b_s']/amount > 1.1 or \
-                    e['b_s']/amount < 0.9 and controller['b_usable'] > 1.0/price_in_cny:
+                    float(e['b_s'])/amount > 1.1 or \
+                    float(e['b_s'])/amount < 0.9 and controller['b_usable'] > 1.0/price_in_cny:
                 await self.bots_cancel_order(ops_bots, e, controller, a_s, a_b)
                 print('reason: balance %s change to %s' % (e['b_s'], amount))
                 continue
@@ -262,7 +266,7 @@ class TradeBots(BTSBotsClient):
             if _key not in self.update_price_time:
                 self.update_price_time[_key] = 0
             if self.head_time-self.update_price_time[_key] > freq:
-                if abs(e['p']/price-1) > max_change or \
+                if abs(float(e['p'])/price-1) > max_change or \
                         e['p'] > max_price:
                     await self.bots_cancel_order(ops_bots, e, controller, a_s, a_b)
                     print('reason: price %s change to %s' % (e['p'], price))

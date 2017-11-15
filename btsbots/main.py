@@ -44,16 +44,21 @@ URL: <{url}>
         description=metadata.description,
         epilog=epilog)
     arg_parser.add_argument(
+            '--url', help="custom ddp server url, default is wss://btsbots.com")
+    arg_parser.add_argument(
         '-V', '--version',
         action='version',
         version='{0} {1}'.format(metadata.project, metadata.version))
+    args = arg_parser.parse_args(args=argv[1:])
+    if args.url:
+        url = args.url
+    else:
+        url = "wss://btsbots.com"
+    url = "%s/websocket" % url
 
-    # account = 'test.iauth'
-    # wifkey = "5HvPnGfqMDrrdBGrtn2xRy1MQGbVgW5m8EWmXUNHBX9W4DzVGyM"
     account = input('account name: ').strip()
     wifkey = getpass.getpass('active private key for %s:' % account)
-    client = TradeBots('wss://btsbots.com/websocket', debug=False)
-    # client = TradeBots('ws://localhost:3000/websocket', debug=False)
+    client = TradeBots(url, debug=False)
     client.login(account, wifkey)
     loop = asyncio.get_event_loop()
     loop.run_until_complete(client.run())

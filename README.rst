@@ -20,10 +20,10 @@ Quick Start
 
        $ btsbots
 
-    before run the bots, you need configure your bots from https://btsbots.com first.
-    after run the command, input your bts account name, and the private key for active permissions.
-    when the spindle rotate, it means the data update from server,
-    when a '*' appear, it means the trade bots are running.
+before run the bots, you need configure your bots from https://btsbots.com first.
+after run the command, input your bts account name, and the private key for active permissions.
+when the spindle rotate, it means the data update from server,
+when a '*' appear, it means the trade bots are running.
 
 Configuration
 ------------

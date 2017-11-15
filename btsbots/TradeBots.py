@@ -121,7 +121,7 @@ class TradeBots(BTSBotsClient):
                     self.add_my_balance(e['a_c'], -e['b_c'], -e['b_c'])
                     self.add_my_balance(e['a_d'], e['b_d'], e['b_d'])
         for _key in self.orders_all:
-            self.orders_all.sort(key=lambda x: x['p'])
+            self.orders_all[_key].sort(key=lambda x: x['p'])
         if cancel_done:
             self.cancel_orders = []
 

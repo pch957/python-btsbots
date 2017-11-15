@@ -255,6 +255,7 @@ setup_dict = dict(
     install_requires=[
         'pyee',
         'ws4py',
+        'secp256k1',
         "graphenelib==0.4.8",
         "scrypt==0.7.1",
         "ecdsa==0.13"

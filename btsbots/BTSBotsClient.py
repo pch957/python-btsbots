@@ -289,6 +289,11 @@ class BTSBotsClient(object):
         timer = 0
         while True:
             try:
+                timer += 1
+                # keep alive every 60 seconds
+                if timer % 20 == 0:
+                    await self.keep_alive()
+
                 time_sleep = self.bi
                 time_now = time.time()
                 if self.isSync and time_now - self.sync_time[1][1] < self.bi:
@@ -308,10 +313,6 @@ class BTSBotsClient(object):
                 print('unexcept error:', e)
             finally:
                 await asyncio.sleep(time_sleep)
-                timer += 1
-                # keep alive every 60 seconds
-                if timer % 20 == 0:
-                    await self.keep_alive()
                 # print(result)
 
 if __name__ == '__main__':

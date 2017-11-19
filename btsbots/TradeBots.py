@@ -23,7 +23,7 @@ class TradeBots(BTSBotsClient):
         self.bots_factory[name] = coro
 
     async def build_cancel_order(self, order_id):
-        self.cancel_orders.append(order_id)
+        self.cancel_orders.append({order_id: self.head_block})
         return await super().build_cancel_order(order_id)
 
     def onProfile(self, id, fields):
@@ -115,7 +115,9 @@ class TradeBots(BTSBotsClient):
                 if e['u'] == self.account:
                     if _key not in self.orders_mine:
                         self.orders_mine[_key] = []
-                    if e['id'] in self.cancel_orders:
+                    # if a cancel fail, wait 20 blocks, then clear it, try again
+                    if e['id'] in self.cancel_orders and \
+                            self.head_block - self.cancel_orders[e['id']] < 20:
                         cancel_done = False
                     self.orders_mine[_key].append(e)
                     self.add_my_balance(e['a_s'], -e['b_s'], 0.0)

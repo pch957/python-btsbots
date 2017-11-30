@@ -199,6 +199,7 @@ class BTSBotsClient(object):
         return _op_cancel
 
     async def build_limit_order(self, amount, price, sellAsset, buyAsset):
+        MAXSUPLY = 10**15
         newasset = []
         for _a in [sellAsset, buyAsset]:
             if _a not in self.ai:
@@ -212,7 +213,11 @@ class BTSBotsClient(object):
         _p1 = self.ai[sellAsset]["p"]
         _p2 = self.ai[buyAsset]["p"]
         _b_s = int(amount*10**_p1)
+        if _b_s > MAXSUPLY:
+            _b_s = MAXSUPLY
         _b_bf = _b_s*price*1.000*10**(_p2-_p1)
+        if _b_bf > MAXSUPLY:
+            _b_bf = MAXSUPLY
         _b_b = int(_b_bf)
         if _b_b <= 0 or _b_s <= 0:
             return None

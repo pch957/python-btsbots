@@ -258,7 +258,7 @@ setup_dict = dict(
         'secp256k1',
         "graphenelib==0.4.8",
         "scrypt==0.7.1",
-        "ecdsa==0.13"
+        "ecdsa==0.13.3"
         # your module dependencies
     ] + python_version_specific_requires,
     # Allow tests to be run with `python setup.py test'.
